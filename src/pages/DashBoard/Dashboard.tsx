@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -10,6 +12,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import FormHelperText from "@mui/material/FormHelperText";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { setParamsQuestion } from "../../redux/question.action";
+import { IParamsQuestion } from "../../types/question";
 
 // https://opentdb.com/api.php?amount=2&category=15&difficulty=easy&type=multiple
 
@@ -27,6 +31,8 @@ interface IFormInput {
 
 const Dashboard = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -37,12 +43,19 @@ const Dashboard = () => {
       category: "",
       difficulty: "",
       type: "",
-      amount: null,
+      amount: 0,
     },
   });
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+    const item: IParamsQuestion = {
+      category: data.category,
+      difficulty: data.difficulty,
+      type: data.type,
+      amount: data.amount || 0,
+    }
+    dispatch(setParamsQuestion(item))
+    navigate('/question')
   };
 
   useEffect(() => {
@@ -80,7 +93,7 @@ const Dashboard = () => {
                 >
                   {categories &&
                     categories.map((item) => (
-                      <MenuItem key={item.id} value={item.name}>
+                      <MenuItem key={item.id} value={item.id}>
                         {item.name}
                       </MenuItem>
                     ))}
