@@ -10,6 +10,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import FormHelperText from "@mui/material/FormHelperText";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, UseDispatch } from "react-redux";
+import { setParamsQuestion } from "../../redux/question.action";
+import { IParamsQuestion } from "../../types/question";
 
 // https://opentdb.com/api.php?amount=2&category=15&difficulty=easy&type=multiple
 
@@ -28,6 +32,10 @@ interface IFormInput {
 const Dashboard = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const {
     control,
     handleSubmit,
@@ -37,12 +45,21 @@ const Dashboard = () => {
       category: "",
       difficulty: "",
       type: "",
-      amount: null,
+      amount: 0,
     },
   });
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+    const item: IParamsQuestion = {
+      category: data.category,
+      type: data.type,
+      difficulty: data.difficulty,
+      amount: data.amount || 0,
+    };
+
+    dispatch(setParamsQuestion(item));
+
+    navigate("/question");
   };
 
   useEffect(() => {
@@ -52,7 +69,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth='md'>
       <Box sx={{ width: "100%" }}>
         <Typography variant='h3' align='center' gutterBottom>
           Quiz App
@@ -80,7 +97,7 @@ const Dashboard = () => {
                 >
                   {categories &&
                     categories.map((item) => (
-                      <MenuItem key={item.id} value={item.name}>
+                      <MenuItem key={item.id} value={item.id}>
                         {item.name}
                       </MenuItem>
                     ))}
