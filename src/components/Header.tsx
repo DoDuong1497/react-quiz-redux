@@ -13,6 +13,10 @@ const Header = () => {
     navigate("/");
   };
 
+  const goToLeaderboard = () => {
+    navigate("/leader-board");
+  };
+
   return (
     <Box sx={{ flexGrow: 1, marginBottom: "50px" }}>
       <AppBar position='static'>
@@ -25,7 +29,7 @@ const Header = () => {
           >
             Quiz App
           </Typography>
-          <Button color='inherit'>LEADER BOARD</Button>
+          <Button color='inherit' onClick={goToLeaderboard}>LEADER BOARD</Button>
         </Toolbar>
       </AppBar>
     </Box>

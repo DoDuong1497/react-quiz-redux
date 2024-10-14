@@ -1,4 +1,5 @@
-import { IAction, IStateQuestion } from "../types/question";
+import { IStateQuestion } from "../types/question";
+import { IAction } from "../types/root";
 
 const initializeState: IStateQuestion = {
   category: "",

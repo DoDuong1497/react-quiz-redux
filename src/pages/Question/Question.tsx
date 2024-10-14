@@ -9,22 +9,26 @@ import { IRootState } from "../../types/root";
 import { useNavigate } from "react-router-dom";
 import { decode } from "html-entities";
 import { updateScore } from "../../redux/question.action";
+import { DIFFICULTY_TIME } from "../../configs";
+import { formatTimer } from "../../utils/formatTimer";
 
 // https://opentdb.com/api.php?amount=2&category=15&difficulty=easy&type=multiple
 
 const Question = () => {
   const navigate = useNavigate();
   const paramsQuestion = useSelector((state: IRootState) => state.question);
+  const { category, type, difficulty, amount } = paramsQuestion;
+
   const [questionIndex, setQuestionIndex] = useState(0);
   const [options, setOptions] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]);
   // const [score, setScore] = useState(0);
+  const [countTime, setCountTime] = React.useState(DIFFICULTY_TIME[difficulty]);
   const dispatch = useDispatch();
   const score = useSelector((state: IRootState) => state.question.score);
 
   // initial question
   useEffect(() => {
-    const { category, type, difficulty, amount } = paramsQuestion;
     if (!category || !type || !difficulty || !amount) {
       navigate("/");
       return;
@@ -62,6 +66,24 @@ const Question = () => {
       setOptions(answers);
     }
   }, [questionIndex]);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCountTime((prevState) => {
+        if(prevState > 0) {
+          return  prevState - 1
+        } else {
+          const content = options[Math.floor(Math.random() * 4)];
+          handleAnswer(content);
+          return DIFFICULTY_TIME[difficulty];
+        }
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    }
+  }, [options])
 
   const handleAnswer = (content: string) => {
     const question = dataSource[questionIndex];
@@ -115,7 +137,14 @@ const Question = () => {
           <Typography variant='body1'>
             Score: {score}/{dataSource.length}
           </Typography>
-          <Typography variant='body1'>Timer: 0:10</Typography>
+          <Typography 
+            variant='body1' 
+            sx={{
+              color: countTime < 10 ? "red" : "black"
+            }}
+          >
+            Timer: {formatTimer(countTime)}
+          </Typography>
         </Stack>
       </Box>
     </Container>
@@ -123,3 +152,7 @@ const Question = () => {
 };
 
 export default Question;
+
+// 30 -> 0:30
+// 45: 0:45
+// 60: 1:00
