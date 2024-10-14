@@ -10,4 +10,5 @@ export type IParamsQuestion = {
   type: string;
   difficulty: string;
   amount: number;
+  score: number;
 };

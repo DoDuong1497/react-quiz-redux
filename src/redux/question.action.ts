@@ -6,3 +6,15 @@ export const setParamsQuestion = (params: IParamsQuestion) => {
     payload: params,
   };
 };
+
+export const updateScore = () => {
+  return {
+    type: "UPDATE_SCORE",
+  };
+};
+
+export const resetScore = () => {
+  return {
+    type: "RESET_SCORE",
+  };
+};

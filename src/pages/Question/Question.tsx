@@ -4,10 +4,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../types/root";
 import { useNavigate } from "react-router-dom";
 import { decode } from "html-entities";
+import { updateScore } from "../../redux/question.action";
 
 // https://opentdb.com/api.php?amount=2&category=15&difficulty=easy&type=multiple
 
@@ -17,7 +18,9 @@ const Question = () => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [options, setOptions] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]);
-  const [score, setScore] = useState(0);
+  // const [score, setScore] = useState(0);
+  const dispatch = useDispatch();
+  const score = useSelector((state: IRootState) => state.question.score);
 
   // initial question
   useEffect(() => {
@@ -63,8 +66,10 @@ const Question = () => {
   const handleAnswer = (content: string) => {
     const question = dataSource[questionIndex];
 
-    if (content === question.correct_answer)
-      setScore((prevState) => prevState + 1);
+    if (content === question.correct_answer) {
+      // setScore((prevState) => prevState + 1);
+      dispatch(updateScore());
+    }
 
     if (questionIndex + 1 === dataSource.length) {
       navigate("/final-score");

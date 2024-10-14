@@ -5,6 +5,7 @@ const initializeState: IStateQuestion = {
   type: "",
   difficulty: "",
   amount: 0,
+  score: 0,
 };
 
 export const questionReducer = (state = initializeState, action: IAction) => {
@@ -16,6 +17,18 @@ export const questionReducer = (state = initializeState, action: IAction) => {
         type: action.payload.type,
         difficulty: action.payload.difficulty,
         amount: action.payload.amount,
+      };
+    }
+    case "UPDATE_SCORE": {
+      return {
+        ...state,
+        score: state.score + 1,
+      };
+    }
+    case "RESET_SCORE": {
+      return {
+        ...state,
+        score: 0,
       };
     }
     default: {

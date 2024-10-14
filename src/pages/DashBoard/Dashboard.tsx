@@ -55,6 +55,7 @@ const Dashboard = () => {
       type: data.type,
       difficulty: data.difficulty,
       amount: data.amount || 0,
+      score: 0,
     };
 
     dispatch(setParamsQuestion(item));
