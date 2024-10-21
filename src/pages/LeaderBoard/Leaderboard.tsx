@@ -1,9 +1,11 @@
+import React from 'react';
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import DescriptionIcon from "@mui/icons-material/Description";
+import { CSVLink, CSVDownload } from "react-csv";
 
 // Table
 import Table from "@mui/material/Table";
@@ -17,30 +19,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootLeaderBoardState } from "../../types/root";
 import { resetScore } from "../../redux/question.action";
 import { useNavigate } from "react-router-dom";
+import TableFooter from "@mui/material/TableFooter/TableFooter";
+import TablePagination from "@mui/material/TablePagination/TablePagination";
+import TextField from '@mui/material/TextField/TextField';
+import { useDebounce } from '../../hooks/useDebounce';
+import { getRandomNameCSV } from '../../utils/getRandomNameCSV';
 
-// function createData(
-//   id: number,
-//   firstname: string,
-//   lastname: string,
-//   email: string,
-//   score: number
-// ) {
-//   return { id, firstname, lastname, email, score };
+// let leaderboards = [];
+
+// for (let i = 0; i < 20; i++) {
+//   leaderboards.push({
+//     id: i + 1,
+//     firstname: Math.random().toString(36).slice(2, 7),
+//     lastname:'last name' + i,
+//     email: 'firstname' + i + '@gmail.com',
+//     score: Math.floor(Math.random() * i)
+//   })
 // }
 
-// const rows = infoList.map(item => {
-//   createData
-// });
-
-// const rows = [
-//   createData(1, "Frozen yoghurt", "Frozen yoghurt", "a@gmail.com", 4),
-// ];
+const csvHeader = ["id", "firstname", "lastname", "email", "score"];
 
 const Leaderboard = () => {
-  const infoList = useSelector(
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = React.useState(0);
+  const [name, setName] = React.useState('');
+  const debouncedValue = useDebounce(name);
+  const leaderboards = useSelector(
     (state: IRootLeaderBoardState) => state.leaderboards.leaderboards
   );
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -48,6 +54,24 @@ const Leaderboard = () => {
     dispatch(resetScore());
     navigate("/");
   };
+
+  function handleChangePage(_: React.MouseEvent | null, page: number) {
+    setPage(page);
+  }
+  
+  function handleChangeRowsPerPage(event: React.ChangeEvent<HTMLInputElement>) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }
+
+  const dataSource = React.useMemo(() => {
+    return leaderboards.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).filter(item => item.firstname.includes(debouncedValue));
+  }, [page, rowsPerPage, debouncedValue]);
+
+  const csvRows = dataSource.map(item => {
+    return [item.id, item.firstname, item.lastname, item.email, item.score];
+  })
+  const csvData = [csvHeader, ...csvRows];
 
   return (
     <Container maxWidth='md'>
@@ -63,13 +87,26 @@ const Leaderboard = () => {
           direction='row'
           sx={{ justifyContent: "flex-end", marginBottom: "25px" }}
         >
-          <Button variant='contained' startIcon={<DescriptionIcon />}>
-            EXPORT CSV
-          </Button>
+          <CSVLink data={csvData} filename={getRandomNameCSV('leaderboard') + ".csv"}>
+            <Button variant='contained' startIcon={<DescriptionIcon />}>
+              EXPORT CSV
+            </Button>
+          </CSVLink>
           <Button variant='outlined' onClick={handleResetScore}>
             GO HOME
           </Button>
         </Stack>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography sx={{ mr: 2 }}>Search:</Typography>
+          <TextField 
+            size='small' 
+            id="outlined-basic" 
+            variant="outlined" 
+            placeholder='Input first name' 
+            onChange={e => setName(e.target.value)}
+          />
+        </Box>
 
         <TableContainer component={Paper}>
           <Table sx={{ width: "100%" }} aria-label='simple table'>
@@ -83,7 +120,7 @@ const Leaderboard = () => {
             </TableHead>
 
             <TableBody>
-              {infoList.map((row) => (
+              {dataSource.map((row) => (
                 <TableRow
                   key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -97,9 +134,26 @@ const Leaderboard = () => {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: leaderboards.length }]}
+                  count={leaderboards.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  // ActionsComponent={<></>}
+                />
+              </TableRow>
+            </TableFooter>
           </Table>
         </TableContainer>
       </Box>
+
+      <br />
+      <br />
+      <br />
     </Container>
   );
 };

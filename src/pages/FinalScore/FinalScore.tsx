@@ -1,4 +1,3 @@
-import React from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,7 +7,6 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../types/root";
-import { resetScore } from "../../redux/question.action";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IFormInfo } from "../../types/leaderboard";
 import { updateLeaderBoard } from "../../redux/leaderBoard.action";
@@ -73,7 +71,7 @@ const FinalScore = () => {
                 label='First Name'
                 variant='standard'
                 fullWidth
-                error={Object.keys(errors || {}).length > 0}
+                error={Boolean(errors?.firstname?.message)}
                 helperText={errors?.firstname?.message}
                 sx={{ marginBottom: "20px" }}
               />
@@ -91,7 +89,7 @@ const FinalScore = () => {
                 label='Last Name'
                 variant='standard'
                 fullWidth
-                error={Object.keys(errors || {}).length > 0}
+                error={Boolean(errors?.lastname?.message)}
                 helperText={errors?.lastname?.message}
                 sx={{ marginBottom: "20px" }}
               />
@@ -115,7 +113,7 @@ const FinalScore = () => {
                 label='Email Address'
                 variant='standard'
                 fullWidth
-                error={Object.keys(errors || {}).length > 0}
+                error={Boolean(errors?.email?.message)}
                 helperText={errors?.email?.message}
                 sx={{ marginBottom: "20px" }}
               />
