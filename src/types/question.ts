@@ -1,8 +1,3 @@
-export type IAction = {
-  type: string;
-  payload: any;
-};
-
 export type IStateQuestion = IParamsQuestion;
 
 export type IParamsQuestion = {
@@ -11,4 +6,7 @@ export type IParamsQuestion = {
   difficulty: string;
   amount: number;
   score: number;
+  firstname: string;
+  lastname: string;
+  email: string;
 };

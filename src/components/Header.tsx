@@ -5,12 +5,20 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetScore } from "../redux/question.action";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const goToHome = () => {
+    dispatch(resetScore());
     navigate("/");
+  };
+
+  const goToLeaderboard = () => {
+    navigate("/leader-board");
   };
 
   return (
@@ -25,7 +33,9 @@ const Header = () => {
           >
             Quiz App
           </Typography>
-          <Button color='inherit'>LEADER BOARD</Button>
+          <Button color='inherit' onClick={goToLeaderboard}>
+            LEADER BOARD
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>
