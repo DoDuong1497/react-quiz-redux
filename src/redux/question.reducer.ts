@@ -7,9 +7,9 @@ const initializeState: IStateQuestion = {
   difficulty: "",
   amount: 0,
   score: 0,
-  firstname: "",
-  lastname: "",
-  email: "",
+  // firstname: "",
+  // lastname: "",
+  // email: "",
 };
 
 export const questionReducer = (state = initializeState, action: IAction) => {
