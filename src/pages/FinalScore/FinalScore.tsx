@@ -1,4 +1,3 @@
-import React from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,7 +7,6 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../types/root";
-import { resetScore } from "../../redux/question.action";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IFormInfo } from "../../types/leaderboard";
 import { updateLeaderBoard } from "../../redux/leaderBoard.action";

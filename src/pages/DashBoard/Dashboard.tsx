@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import FormHelperText from "@mui/material/FormHelperText";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, UseDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setParamsQuestion } from "../../redux/question.action";
 import { IParamsQuestion } from "../../types/question";
 

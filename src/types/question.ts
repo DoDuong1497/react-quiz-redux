@@ -6,7 +6,7 @@ export type IParamsQuestion = {
   difficulty: string;
   amount: number;
   score: number;
-  firstname: string;
-  lastname: string;
-  email: string;
+  // firstname: string;
+  // lastname: string;
+  // email: string;
 };
